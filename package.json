@@ -17,8 +17,9 @@
     "@types/react": "^19.2.8",
     "@types/react-dom": "^19.2.3",
     "astro": "^5.17.1",
+    "node-poppler": "^9.1.1",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
-    "sharp": "^0.34.3"
+    "sharp": "^0.34.5"
   }
 }

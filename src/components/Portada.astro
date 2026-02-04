@@ -1,0 +1,79 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  title: string;
+  category?: string;
+  pdf_path?: string;
+  heroImage?: ImageMetadata;
+  width?: number;
+  height?: number;
+}
+
+
+const { 
+  title, 
+  category,
+  pdf_path, 
+  heroImage,
+  width = 400,
+  height = 600
+} = Astro.props;
+
+// Generate thumbnail URL from PDF
+const getThumbnailUrl = (pdf_path: string | undefined): string | null => {
+  if (!pdf_path) return null;
+  
+  const encodedCategory = encodeURIComponent(category || "");
+  const encodedFilename = encodeURIComponent(pdf_path);
+  const path = category ? `/documents/${encodedCategory}/${encodedFilename}`: `/documents/${encodedFilename}`;
+  const encodedPath = encodeURIComponent(path);
+
+  return `/api/portades_pdf?src=${encodedPath}&width=${width}&height=${height}`;
+};
+
+const thumbnailUrl = getThumbnailUrl(pdf_path);
+---
+
+{thumbnailUrl ? (
+  <img 
+    src={thumbnailUrl}
+    alt={`${title}`}
+    width={width}
+    height={height}
+    loading="eager"
+  />
+) : heroImage ? (
+  <Image 
+    src={heroImage}
+    alt={title}
+    width={720}
+    height={360}
+  />
+) : (
+  <div class="placeholder">No s'ha trobat la portada per a {title}</div>
+)}
+
+<style>
+  img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 12px;
+  }
+  
+  .placeholder {
+    width: 100%;
+    aspect-ratio: 2/3;
+    background: linear-gradient(135deg, var(--accent), var(--dark));
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 0.9rem;
+    text-align: center;
+    padding: 1rem;
+  }
+</style>

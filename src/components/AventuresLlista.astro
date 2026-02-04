@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import FormattedDate from './FormattedDate.astro';
+import Portada from './Portada.astro';
 
 const posts = (await getCollection('content')).filter(post => post.data.category === 'aventures').sort(
     (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
@@ -87,14 +88,19 @@ const posts = (await getCollection('content')).filter(post => post.data.category
         {posts.map((post) => (
             <li>
                 <a href={`/aventures/${post.id}/`}>
-                    {post.data.heroImage && (
-                        <Image width={720} height={360} src={post.data.heroImage} alt={post.data.title} />
-                    )}
+                    <Portada 
+                        title={post.data.title}
+                        pdf_path={post.data.pdf_path}
+                        category={post.data.category}
+                        heroImage={post.data.heroImage}
+                        width={400}
+                        height={600}
+                    />
                     <h4 class="title">{post.data.title}</h4>
                     <p class="date">
                         <FormattedDate date={post.data.pubDate} />
                     </p>
-                    {post.data.description && <p class="excerpt">{post.data.description}</p>}
+                    {post.data.long_description && <p class="excerpt">{post.data.long_description}</p>}
                 </a>
             </li>
         ))}
